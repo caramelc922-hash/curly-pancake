@@ -1,9 +1,14 @@
+import os
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import Updater, CommandHandler, CallbackContext, CallbackQueryHandler
 import telegram
 
-CHANNEL_ID = "@mediabecek"  
-BOT_TOKEN = "7713895035:AAHlxC4QOoko0bU-V-fTe6ZvCJxiNAi7WoM"  
+BOT_TOKEN = "7713895035:AAHlxC4QOoko0bU-V-fTe6ZvCJxiNAi7WoM"
+CHANNEL_ID = "@mediabecek"
+
+# Buat file users.txt kalau belum ada
+if not os.path.exists("users.txt"):
+    open("users.txt", "w").close()
 
 def start(update: Update, context: CallbackContext):
     user_id = update.effective_user.id
@@ -14,15 +19,15 @@ def start(update: Update, context: CallbackContext):
         if str(user_id) not in f.read():
             f.write(str(user_id) + "\n")
 
-    photo_url = "https://deras88.b-cdn.net/ADS%20DERAS88%20(29)%20(1).png"  
+    photo_url = "https://deras88.b-cdn.net/ADS%20DERAS88%20(29)%20(1).png"
     caption = (
         f"👋 Hai {first_name}!\n\n"
-        "Selamat datang di *Channel Eksklusif!* 🔥\n\n"
-        "Untuk melihat konten premium, kamu wajib join channel terlebih dahulu ya."
+        "Selamat datang di *Media Becek!* 🔥\n\n"
+        "Untuk melihat konten premium, silakan join channel dulu ya!"
     )
 
     keyboard = [
-        [InlineKeyboardButton("🔗 Join Channel", url=f"https://t.me/{CHANNEL_ID[1:]}")],
+        [InlineKeyboardButton("🔗 Join Channel", url="https://t.me/mediabecek")],
         [InlineKeyboardButton("✅ Sudah Join", callback_data='check_join')]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -42,7 +47,7 @@ def check_join(update: Update, context: CallbackContext):
     try:
         member = context.bot.get_chat_member(CHANNEL_ID, user_id)
         if member.status in ['member', 'administrator', 'creator']:
-            query.edit_message_text("✅ Kamu sudah join! Ini kontennya:\nhttps://t.me/s/namachannelkamu/1")
+            query.edit_message_text("✅ Kamu sudah join!\n\nBerikut kontennya:\nhttps://t.me/mediabecek/1")
         else:
             query.answer("❌ Kamu belum join channel!", show_alert=True)
     except telegram.error.TelegramError:
